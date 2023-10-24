@@ -46,6 +46,13 @@ public class Cart {
     @Builder.Default
     private List<CartUser> cartUsers = new ArrayList<>();
 
+    public void addCartUser(CartUser cartUser){
+        cartUsers.add(cartUser);
+    }
+    public void addCartProduct(CartProduct cartProduct){
+        cartProducts.add(cartProduct);
+    }
+
     public String getOwnerNickname() {
         return cartUsers.stream()
                 .filter(CartUser::getIsOwner)
