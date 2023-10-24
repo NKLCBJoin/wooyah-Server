@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    container_name: wooyah_dev_db
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wooyah_dev
+      TZ: Asia/Seoul
+      LANG: C.UTF-8
+    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3308:3306"
+
