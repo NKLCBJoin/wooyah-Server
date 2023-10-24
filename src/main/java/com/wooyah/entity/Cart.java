@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -35,4 +37,22 @@ public class Cart {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CartProduct> cartProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CartUser> cartUsers = new ArrayList<>();
+
+    public String getOwnerNickname() {
+        return cartUsers.stream()
+                .filter(CartUser::getIsOwner)
+                .map(CartUser::getUser)
+                .map(User::getNickname)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("카트 주인을 찾을 수 없습니다."));
+    }
+
 }
