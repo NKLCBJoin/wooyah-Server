@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -18,6 +16,6 @@ public class CartService {
     public CartDTO.Detail getDetail(Long cartId){
         Cart findCart = cartRepository.findById(cartId).orElseThrow(() -> new IllegalArgumentException("cartId에 해당하는 cart가 존재하지 않습니다."));
 
-        return CartDTO.Detail.entityToDto(findCart);
+        return CartDTO.Detail.from(findCart);
     }
 }
