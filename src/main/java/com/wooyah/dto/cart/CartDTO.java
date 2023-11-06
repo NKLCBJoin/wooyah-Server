@@ -3,8 +3,6 @@ package com.wooyah.dto.cart;
 import com.wooyah.dto.product.ProductDTO;
 import com.wooyah.entity.Cart;
 import com.wooyah.entity.CartProduct;
-import com.wooyah.entity.CartUser;
-import com.wooyah.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,10 +17,10 @@ public class CartDTO {
         private String shoppingLocation;
         private List<ProductDTO.Detail> products;
 
-        public static Detail entityToDto(Cart cart){
+        public static Detail from(Cart cart){
             List<ProductDTO.Detail> productDetails = cart.getCartProducts().stream()
                     .map(CartProduct::getProduct)
-                    .map(ProductDTO.Detail::entityToDto)
+                    .map(ProductDTO.Detail::from)
                     .toList();
 
             return Detail.builder()
