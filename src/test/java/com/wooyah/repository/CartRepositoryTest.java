@@ -62,14 +62,14 @@ class CartRepositoryTest{
 
         //then
         assertThat(nearestCarts).hasSize(2)
-                .extracting("longitude")
+                .extracting("latitude")
                 .containsExactlyInAnyOrder(
                         BigDecimal.valueOf(38.100000),
                         BigDecimal.valueOf(38.200000));
 
     }
 
-    private Cart createCart(BigDecimal longitude, BigDecimal latitude){
+    private Cart createCart(BigDecimal latitude, BigDecimal longitude){
         return Cart.builder()
                 .longitude(longitude)
                 .latitude(latitude)
