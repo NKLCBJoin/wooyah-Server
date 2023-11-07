@@ -6,6 +6,7 @@ import com.wooyah.entity.CartProduct;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CartDTO {
@@ -28,6 +29,22 @@ public class CartDTO {
                     .nickname(cart.getOwnerNickname())
                     .shoppingLocation(cart.getShoppingLocation())
                     .products(productDetails)
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    public static class Near {
+        private Long cartId;
+        private BigDecimal latitude;
+        private BigDecimal longitude;
+
+        public static Near from(Cart cart) {
+            return Near.builder()
+                    .cartId(cart.getId())
+                    .latitude(cart.getLatitude())
+                    .longitude(cart.getLongitude())
                     .build();
         }
     }
