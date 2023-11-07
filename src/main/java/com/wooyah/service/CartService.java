@@ -27,7 +27,7 @@ public class CartService {
 
     public PaginationListDTO<CartDTO.Near> getNearCarts(Long userId, int zoom) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(ExceptionMessage.USER_NOT_FOUND.getMessage()));
-        List<Cart> findCarts = cartRepository.findCartsNearestTo(user.getLongitude(), user.getLatitude(), zoom*5);
+        List<Cart> findCarts = cartRepository.findCartsNearestTo(user.getLatitude(), user.getLongitude(), zoom*5);
 
         List<CartDTO.Near> nearCarts = findCarts.stream()
                 .map(CartDTO.Near::from)

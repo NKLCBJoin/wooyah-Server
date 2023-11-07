@@ -126,7 +126,7 @@ class CartServiceTest extends IntegrationTestSupport {
 
         assertThat(nearCarts.getCount()).isEqualTo(5);
         assertThat(nearCarts.getData()).hasSize(5)
-                .extracting("longitude")
+                .extracting("latitude")
                 .containsExactlyInAnyOrder(
                         BigDecimal.valueOf(38.100000), BigDecimal.valueOf(38.200000),
                         BigDecimal.valueOf(38.300000), BigDecimal.valueOf(38.400000),
@@ -144,7 +144,7 @@ class CartServiceTest extends IntegrationTestSupport {
     }
 
 
-    private Cart createCart(BigDecimal longitude, BigDecimal latitude){
+    private Cart createCart(BigDecimal latitude, BigDecimal longitude){
         return Cart.builder()
                 .longitude(longitude)
                 .latitude(latitude)
