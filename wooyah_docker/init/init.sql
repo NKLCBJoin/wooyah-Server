@@ -6,11 +6,12 @@ CREATE TABLE `users` (
                          `phone` VARCHAR(20) NOT NULL,
                          `gender` VARCHAR(6) NULL CHECK (gender IN ('MAN', 'WOMAN')),
                          `device_number` VARCHAR(64) NOT NULL,
+                         `email` VARCHAR(100) NOT NULL, -- Added email column
                          `latitude` DECIMAL(9,6) NULL,
                          `longitude` DECIMAL(9,6) NULL,
                          `created_at` DATETIME NOT NULL,
                          PRIMARY KEY (`user_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `products` (
                             `product_id` BIGINT NOT NULL,
