@@ -30,6 +30,8 @@ public class User {
 
     private String phone;
 
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
