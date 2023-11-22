@@ -7,3 +7,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+jwt:
+  secretKey: dfdfdfdfadfadfodfijsdofjsdoifjsdofjsdfojdfs
+
+  access:
+    expiration: 3600000 # 1??(60?) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: Authorization
