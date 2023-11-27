@@ -3,6 +3,7 @@ package com.wooyah.dto.cart;
 import com.wooyah.dto.product.ProductDTO;
 import com.wooyah.entity.Cart;
 import com.wooyah.entity.CartProduct;
+import com.wooyah.entity.enums.CartStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class CartDTO {
         private String nickname;
         private String shoppingLocation;
         private List<ProductDTO.Detail> products;
+        private CartStatus cartStatus;
 
         public static Detail from(Cart cart){
             List<ProductDTO.Detail> productDetails = cart.getCartProducts().stream()
@@ -26,6 +28,7 @@ public class CartDTO {
 
             return Detail.builder()
                     .cartId(cart.getId())
+                    .cartStatus(cart.getStatus())
                     .nickname(cart.getOwnerNickname())
                     .shoppingLocation(cart.getShoppingLocation())
                     .products(productDetails)

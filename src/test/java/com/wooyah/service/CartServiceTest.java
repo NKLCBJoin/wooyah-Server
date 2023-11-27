@@ -4,6 +4,8 @@ import com.wooyah.IntegrationTestSupport;
 import com.wooyah.dto.cart.CartDTO;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.entity.*;
+import com.wooyah.entity.enums.CartStatus;
+import com.wooyah.exceptions.NotFoundException;
 import com.wooyah.repository.CartRepository;
 
 import jakarta.persistence.EntityManager;
@@ -98,7 +100,7 @@ class CartServiceTest extends IntegrationTestSupport {
     public void getDetail_withInvalidCartId() {
         // when & then
         assertThatThrownBy(() -> cartService.getDetail(-1L)) // 존재하지 않는 id
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("해당하는 카트를 찾을 수 없습니다");
 
     }
@@ -110,26 +112,26 @@ class CartServiceTest extends IntegrationTestSupport {
         Integer zoom = 1;
         //given
         List<Cart> carts = List.of(
-                createCart(BigDecimal.valueOf(38.200000), BigDecimal.valueOf(127.200000)),
-                createCart(BigDecimal.valueOf(38.100000), BigDecimal.valueOf(127.100000)),
-                createCart(BigDecimal.valueOf(38.400000), BigDecimal.valueOf(127.400000)),
-                createCart(BigDecimal.valueOf(38.300000), BigDecimal.valueOf(127.300000)),
-                createCart(BigDecimal.valueOf(38.600000), BigDecimal.valueOf(127.600000)),
-                createCart(BigDecimal.valueOf(38.500000), BigDecimal.valueOf(127.500000)),
-                createCart(BigDecimal.valueOf(38.800000), BigDecimal.valueOf(127.800000)),
-                createCart(BigDecimal.valueOf(38.700000), BigDecimal.valueOf(127.700000))
+                createCart(BigDecimal.valueOf(38.200000), BigDecimal.valueOf(127.200000), CartStatus.INPROGRESS),
+                createCart(BigDecimal.valueOf(38.100000), BigDecimal.valueOf(127.100000), CartStatus.EXPIRED),
+                createCart(BigDecimal.valueOf(38.400000), BigDecimal.valueOf(127.400000), CartStatus.DELETE),
+                createCart(BigDecimal.valueOf(38.300000), BigDecimal.valueOf(127.300000), CartStatus.INPROGRESS),
+                createCart(BigDecimal.valueOf(38.600000), BigDecimal.valueOf(127.600000), CartStatus.INPROGRESS),
+                createCart(BigDecimal.valueOf(38.500000), BigDecimal.valueOf(127.500000), CartStatus.INPROGRESS),
+                createCart(BigDecimal.valueOf(38.800000), BigDecimal.valueOf(127.800000), CartStatus.INPROGRESS),
+                createCart(BigDecimal.valueOf(38.700000), BigDecimal.valueOf(127.700000), CartStatus.INPROGRESS)
         );
         cartRepository.saveAll(carts);
 
         //when
         PaginationListDTO<CartDTO.Near> nearCarts = cartService.getNearCarts(user.getId(), zoom);
 
-        assertThat(nearCarts.getCount()).isEqualTo(5);
-        assertThat(nearCarts.getData()).hasSize(5)
+        assertThat(nearCarts.getCount()).isEqualTo(3);
+        assertThat(nearCarts.getData()).hasSize(3)
                 .extracting("latitude")
                 .containsExactlyInAnyOrder(
-                        BigDecimal.valueOf(38.100000), BigDecimal.valueOf(38.200000),
-                        BigDecimal.valueOf(38.300000), BigDecimal.valueOf(38.400000),
+                        BigDecimal.valueOf(38.200000),
+                        BigDecimal.valueOf(38.300000),
                         BigDecimal.valueOf(38.500000));
 
     }
@@ -139,13 +141,14 @@ class CartServiceTest extends IntegrationTestSupport {
     @DisplayName("요청받은 userId의 user가 존재하지 않는 경우  Exception을 throw 한다.")
     public void getNearCarts_withInvalidUserId(){
         assertThatThrownBy(() -> cartService.getNearCarts(-1L, 1)) // 존재하지 않는 id
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("해당하는 사용자를 찾을 수 없습니다");
     }
 
 
-    private Cart createCart(BigDecimal latitude, BigDecimal longitude){
+    private Cart createCart(BigDecimal latitude, BigDecimal longitude, CartStatus cartStatus){
         return Cart.builder()
+                .status(cartStatus)
                 .longitude(longitude)
                 .latitude(latitude)
                 .build();
