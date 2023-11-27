@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,18 @@ public class CartService {
                 .orElseThrow(() -> new NotFoundException(ExceptionMessage.USER_NOT_FOUND));
 
         List<Cart> findCarts = cartRepository.findCartsNearestTo(user.getLatitude(), user.getLongitude(), zoom*5);
+
+        List<CartDTO.Near> nearCarts = getNearsCarts(findCarts);
+
+        return PaginationListDTO.<CartDTO.Near>builder()
+                .count(nearCarts.size())
+                .data(nearCarts)
+                .build();
+    }
+
+    public PaginationListDTO<CartDTO.Near> getNearCarts(BigDecimal latitude, BigDecimal longitude, int zoom) {
+
+        List<Cart> findCarts = cartRepository.findCartsNearestTo(latitude, longitude, zoom*5);
 
         List<CartDTO.Near> nearCarts = getNearsCarts(findCarts);
 
@@ -77,6 +90,16 @@ public class CartService {
     }
 
 
+    public PaginationListDTO<CartDTO.Near> getAllCarts() {
+        List<Cart> allCarts = cartRepository.findAll();
 
+        List<CartDTO.Near> response = allCarts.stream()
+                .map(CartDTO.Near::from)
+                .toList();
 
+        return PaginationListDTO.<CartDTO.Near>builder()
+                .count(response.size())
+                .data(response)
+                .build();
+    }
 }

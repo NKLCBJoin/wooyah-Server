@@ -2,6 +2,8 @@ package com.wooyah.entity;
 
 import com.wooyah.entity.base.BaseEntity;
 import com.wooyah.entity.enums.CartStatus;
+import com.wooyah.exceptions.ExceptionMessage;
+import com.wooyah.exceptions.NotFoundException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -55,7 +57,7 @@ public class Cart extends BaseEntity {
                 .map(CartUser::getUser)
                 .map(User::getNickname)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("카트 주인을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException(ExceptionMessage.CART_OWNER_NOT_FOUND));
     }
 
 }

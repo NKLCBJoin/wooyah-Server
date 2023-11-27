@@ -12,7 +12,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "(6371 * acos(cos(radians(?1)) * cos(radians(c.latitude)) " +
             "* cos(radians(c.longitude) - radians(?2)) + sin(radians(?1)) " +
             "* sin(radians(c.latitude)))) AS distance " +
-            "FROM carts c ORDER BY distance ASC LIMIT ?3", nativeQuery = true)
+            "FROM carts c ORDER BY distance ASC LIMIT ?3 ", nativeQuery = true)
     List<Cart> findCartsNearestTo(BigDecimal latitude, BigDecimal longitude, int limit);
 
 }
