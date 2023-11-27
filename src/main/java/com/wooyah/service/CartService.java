@@ -25,7 +25,6 @@ import java.util.Optional;
 public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
-    private final CartUserRepository cartUserRepository;
 
     public CartDTO.Detail getDetail(Long cartId){
         Cart findCart = cartRepository.findById(cartId)
@@ -55,7 +54,12 @@ public class CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NotFoundException(ExceptionMessage.CART_NOT_FOUND));
 
-        CartUser cartUser = cartUserRepository.findByUserAndCart(user, cart)
+        List<CartUser> cartUsers = cart.getCartUsers();
+
+        CartUser cartUser = cartUsers.stream()
+                .filter(cu -> cu.getCart().equals(cart))
+                .filter(cu -> cu.getUser().equals(user))
+                .findFirst()
                 .orElseThrow(() -> new NotFoundException(ExceptionMessage.CART_USER_NOT_FOUND));
 
         if(cartUser.getIsOwner()){

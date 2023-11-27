@@ -1,6 +1,8 @@
 package com.wooyah.entity;
 
 import com.wooyah.entity.enums.CartStatus;
+import com.wooyah.exceptions.ExceptionMessage;
+import com.wooyah.exceptions.NotFoundException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -59,7 +61,7 @@ public class Cart {
                 .map(CartUser::getUser)
                 .map(User::getNickname)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("카트 주인을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException(ExceptionMessage.CART_OWNER_NOT_FOUND));
     }
 
 }
