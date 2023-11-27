@@ -90,6 +90,16 @@ public class CartService {
     }
 
 
+    public PaginationListDTO<CartDTO.Near> getAllCarts() {
+        List<Cart> allCarts = cartRepository.findAll();
 
+        List<CartDTO.Near> response = allCarts.stream()
+                .map(CartDTO.Near::from)
+                .toList();
 
+        return PaginationListDTO.<CartDTO.Near>builder()
+                .count(response.size())
+                .data(response)
+                .build();
+    }
 }

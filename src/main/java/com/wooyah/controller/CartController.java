@@ -75,4 +75,16 @@ public class CartController {
                 .message("작성글이 정상적으로 삭제되었습니다.")
                 .build();
     }
+
+    @GetMapping("/all-carts")
+    public ApiResponse<PaginationListDTO<CartDTO.Near>> getNearCartsByLatAndLong(){
+        PaginationListDTO<CartDTO.Near> allCarts = cartService.getAllCarts();
+
+        return ApiResponse.<PaginationListDTO<CartDTO.Near>>builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("개발용 모든 카트 조회")
+                .result(allCarts)
+                .build();
+    }
 }
