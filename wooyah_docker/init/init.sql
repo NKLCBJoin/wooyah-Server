@@ -1,5 +1,5 @@
 CREATE TABLE `users` (
-                         `user_id` BIGINT NOT NULL,
+                         `user_id` BIGINT NOT NULL AUTO_INCREMENT,
                          `nickname` VARCHAR(15) NOT NULL,
                          `profile_image` VARCHAR(200) NULL,
                          `location` VARCHAR(200) NOT NULL,
@@ -14,13 +14,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `products` (
-                            `product_id` BIGINT NOT NULL,
+                            `product_id` BIGINT NOT NULL AUTO_INCREMENT,
                             `product_name` VARCHAR(50) NOT NULL,
                             PRIMARY KEY (`product_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `carts` (
-                         `cart_id` BIGINT NOT NULL,
+                         `cart_id` BIGINT NOT NULL AUTO_INCREMENT,
                          `shopping_location` VARCHAR(200) NOT NULL,
                          `participant_number` INT NULL,
                          `latitude` DECIMAL(9,6) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `carts` (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `cart_products` (
-                                 `cart_product_id` BIGINT NOT NULL,
+                                 `cart_product_id` BIGINT NOT NULL AUTO_INCREMENT,
                                  `cart_id` BIGINT NOT NULL,
                                  `product_id` BIGINT NOT NULL,
                                  PRIMARY KEY (`cart_product_id`),
@@ -40,7 +40,7 @@ CREATE TABLE `cart_products` (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `cart_users` (
-                              `cart_user_id` BIGINT NOT NULL,
+                              `cart_user_id` BIGINT NOT NULL AUTO_INCREMENT,
                               `user_id` BIGINT NOT NULL,
                               `cart_id` BIGINT NOT NULL,
                               `is_owner` BOOLEAN NOT NULL,
