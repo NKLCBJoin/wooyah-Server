@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -44,6 +45,21 @@ public class CartController {
                 .isSuccess(true)
                 .code(HttpStatus.OK.value())
                 .message("지도 카트 목록 표시")
+                .result(nearCarts)
+                .build();
+    }
+
+
+    @GetMapping("/near")
+    public ApiResponse<PaginationListDTO<CartDTO.Near>> getNearCartsByLatAndLong(@RequestParam BigDecimal latitude,
+                                                                                 @RequestParam BigDecimal longitude,
+                                                                                 @RequestParam(value="zoom", defaultValue="1") int zoom){
+        PaginationListDTO<CartDTO.Near> nearCarts = cartService.getNearCarts(latitude, longitude, zoom);
+
+        return ApiResponse.<PaginationListDTO<CartDTO.Near>>builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("요청받은 위/경도 기준 가까운 카트 목록 표시")
                 .result(nearCarts)
                 .build();
     }
