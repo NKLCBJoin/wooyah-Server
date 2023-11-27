@@ -1,5 +1,6 @@
 package com.wooyah.entity;
 
+import com.wooyah.entity.base.BaseEntity;
 import com.wooyah.entity.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,10 +15,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Setter
 @Getter
 @Table(name="users")
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
@@ -42,8 +42,6 @@ public class User {
 
     private BigDecimal longitude;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
