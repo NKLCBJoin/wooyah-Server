@@ -47,4 +47,16 @@ public class CartController {
                 .result(nearCarts)
                 .build();
     }
+
+    @DeleteMapping
+    public ApiResponse<?> deleteCart(@RequestParam(value="cartId") Long cartId){
+        Long userId = 1L;
+        cartService.deleteCart(userId, cartId);
+
+        return ApiResponse.builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("작성글이 정상적으로 삭제되었습니다.")
+                .build();
+    }
 }
