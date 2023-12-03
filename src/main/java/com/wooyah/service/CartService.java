@@ -1,6 +1,7 @@
 package com.wooyah.service;
 
 import com.wooyah.dto.cart.CartDTO;
+import com.wooyah.dto.cart.CartHomeDTO;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.entity.Cart;
 import com.wooyah.entity.User;
@@ -39,5 +40,11 @@ public class CartService {
                 .build();
     }
 
+    //추가 코드
+    public CartHomeDTO.Detail getHomeDetail(){
+        List<Cart> carts = cartRepository.findAll();
+
+        return CartHomeDTO.Detail.from(carts);
+    }
 
 }

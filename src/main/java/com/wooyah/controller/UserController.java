@@ -5,10 +5,7 @@ import com.wooyah.jwt.JwtService;
 import com.wooyah.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +23,9 @@ public class UserController {
         return "jwt토큰 테스트";
     }
 
-    @PostMapping("/api/auth/kakao")
-    public String exlogin(@RequestBody UserSignUpDto userSignUpDto, HttpServletResponse response)throws Exception {
+    @PostMapping("/api/auth/{sns}")
+    public String exlogin(@RequestBody UserSignUpDto userSignUpDto, HttpServletResponse response,
+                          @PathVariable("sns") String sns)throws Exception {
 
         //서비스에 db 조회해서 있다면 로그인, 없다면 저장
         String msg = userService.emailcheck(userSignUpDto);

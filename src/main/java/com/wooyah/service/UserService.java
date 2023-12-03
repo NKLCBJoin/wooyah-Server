@@ -21,7 +21,6 @@ public class UserService {
     //이메일 db 조회후 처리하기
     public String emailcheck(UserSignUpDto userSignUpDto) {
 
-
         if (userRepository.findByEmail(userSignUpDto.getEmail()).isPresent()) {
             return "이메일 정보가 있습니다.";
         }
@@ -30,9 +29,8 @@ public class UserService {
                     .email(userSignUpDto.getEmail())
                     .nickname(userSignUpDto.getNickname())
                     .phone(userSignUpDto.getPhone())
-                    .deviceNumber("1234") //넣어둠
-                    .location("예시 위치") //넣어둠
-                    //필요한거 추가해서 db에 저장
+                    .deviceNumber(userSignUpDto.getDevice_number())
+                    .location(userSignUpDto.getLocation())
                     .build();
 
             userRepository.save(user);

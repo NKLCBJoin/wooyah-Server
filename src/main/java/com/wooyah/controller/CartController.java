@@ -1,6 +1,7 @@
 package com.wooyah.controller;
 
 import com.wooyah.dto.cart.CartDTO;
+import com.wooyah.dto.cart.CartHomeDTO;
 import com.wooyah.dto.common.ApiResponse;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.dto.product.ProductDTO;
@@ -45,6 +46,20 @@ public class CartController {
                 .code(HttpStatus.OK.value())
                 .message("지도 카트 목록 표시")
                 .result(nearCarts)
+                .build();
+    }
+
+    //추가코드
+    @GetMapping("/home")
+    public ApiResponse<CartHomeDTO.Detail> cartHomeDTOApiResponse() {
+
+        CartHomeDTO.Detail homepage = cartService.getHomeDetail();
+
+        return ApiResponse.<CartHomeDTO>builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("홈 화면 글 목록")
+                .result(homepage)
                 .build();
     }
 }

@@ -8,5 +8,8 @@ import lombok.NoArgsConstructor;
 public class UserSignUpDto {
     private String email;
     private String nickname;
+
+    private String location;
     private String phone;
+    private String device_number;
 }
