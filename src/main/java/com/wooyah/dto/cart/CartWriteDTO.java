@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class CartWriteDTO {
     private String location;
-    private int participant_number;
+    private int participantNumber;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private List<String> products;

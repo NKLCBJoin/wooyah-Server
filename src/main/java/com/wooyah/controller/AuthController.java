@@ -20,14 +20,10 @@ public class AuthController {
     private final JwtAuthenticationProcessingFilter jwt;
 
     @GetMapping("/test")
-    public String jwtTest(HttpServletResponse response) {
-
+    public String jwtTest() {
 
         Long jwtExtractId = jwt.getJwtExtractId();
 
-
-
-        //jwtService.sendAccessToken(response, jwtService.createAccessToken("123")); //임의로 이메일 추가하여 response에 토큰 달아서 보내기
         return "토큰 테스트 : 이메일에 대한 아이디는"+jwtExtractId;
     }
 

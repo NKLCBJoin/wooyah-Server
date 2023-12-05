@@ -26,14 +26,7 @@ public class CartUserController {
     @PostMapping("/{cartId}")
     public ApiResponse<?> requestCartUser(@PathVariable("cartId") Long cartId, HttpServletRequest request)throws Exception{
 
-        //jwt토큰 이용해서 email 얻기 가능
-/*        String email = jwtService.extractAccessToken(request)
-                .flatMap(jwtService::extractEmail)
-                .orElse("디폴트 이메일");*/
-        String email = "abc@aaa.com";
-
-        cartUserService.saveCartUser(cartId, email);
-
+        cartUserService.saveCartUser(cartId);
 
         return ApiResponse.builder()
                 .isSuccess(true)
@@ -52,7 +45,6 @@ public class CartUserController {
         String email = "abc@aaa.com";
 
         CartUserDTO response = cartUserService.getCartUserStatus(cartId, email);
-
 
         return ApiResponse.<CartUserDTO>builder()
                 .isSuccess(true)

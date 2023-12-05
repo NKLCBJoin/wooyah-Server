@@ -67,13 +67,6 @@ public class UserService {
                 .build();
     }
 
-    public Long getUserIdByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("이메일에 해당하는 윶저가 없습니다: " + email));
-        return user.getId();
-    }
-
-
     //이메일 db 조회후 처리하기
     @Transactional
     public String emailcheck(UserSignUpDTO userSignUpDto) {

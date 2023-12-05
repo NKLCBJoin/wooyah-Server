@@ -90,9 +90,9 @@ public class CartController {
                 .build();
     }
 
-    public ApiResponse<?> writeCart(@RequestBody CartWriteDTO cartWriteDTO, HttpServletResponse response){
-
-
+    @PostMapping
+    public ApiResponse<?> writeCart(@RequestBody CartWriteDTO cartWriteDTO){
+        cartService.saveCart(cartWriteDTO);
 
         return ApiResponse.builder()
                 .isSuccess(true)
