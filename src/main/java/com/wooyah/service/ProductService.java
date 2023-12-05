@@ -26,7 +26,10 @@ public class ProductService {
 
             //이름 검색후 없으면 새로 생성
             Product product = productRepository.findByProductName(productName)
-                    .orElseGet(() -> Product.builder().productName(productName).build());
+                    .orElseGet(() -> Product.builder()
+                            .productName(productName)
+                            .build());
+
             products.add(productRepository.save(product));
         }
         return products;

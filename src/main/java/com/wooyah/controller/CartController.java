@@ -1,10 +1,15 @@
 package com.wooyah.controller;
 
 import com.wooyah.dto.cart.CartDTO;
+import com.wooyah.dto.cart.CartHomeDTO;
 import com.wooyah.dto.cart.CartWriteDTO;
 import com.wooyah.dto.common.ApiResponse;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.dto.product.ProductDTO;
+import com.wooyah.entity.Cart;
+import com.wooyah.entity.CartProduct;
+import com.wooyah.entity.CartUser;
+import com.wooyah.entity.Product;
 import com.wooyah.service.CartService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -90,11 +95,25 @@ public class CartController {
                 .build();
     }
 
+
+    @GetMapping("/home")
+    public ApiResponse<CartHomeDTO.Detail> cartHomeDTOApiResponse() {
+
+        CartHomeDTO.Detail homepage = cartService.getHomeDetail();
+
+        return ApiResponse.<CartHomeDTO.Detail>builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("홈 화면 글 목록")
+                .result(homepage)
+                .build();
+    }
+
     @PostMapping
     public ApiResponse<?> writeCart(@RequestBody CartWriteDTO cartWriteDTO){
         cartService.saveCart(cartWriteDTO);
 
-        return ApiResponse.builder()
+        return ApiResponse.<List<?>>builder()
                 .isSuccess(true)
                 .code(HttpStatus.OK.value())
                 .message("함께 장보기 등록이 완료되었습니다.")

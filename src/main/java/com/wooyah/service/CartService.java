@@ -1,6 +1,7 @@
 package com.wooyah.service;
 
 import com.wooyah.dto.cart.CartDTO;
+import com.wooyah.dto.cart.CartHomeDTO;
 import com.wooyah.dto.cart.CartWriteDTO;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.entity.*;
@@ -107,6 +108,13 @@ public class CartService {
                 .build();
     }
 
+    //추가 코드
+    public CartHomeDTO.Detail getHomeDetail(){
+        List<Cart> carts = cartRepository.findAll();
+
+        return CartHomeDTO.Detail.from(carts);
+    }
+
     //카트 생성
     @Transactional
     public void saveCart(CartWriteDTO cartWriteDTO) {
@@ -127,7 +135,10 @@ public class CartService {
 
         // cart에 있는 cartProducts에 추가
         for (Product product : products) {
-            CartProduct cartProduct = CartProduct.builder().product(product).build();
+            CartProduct cartProduct = CartProduct.builder()
+                    .product(product)
+                    .cart(cart)
+                    .build();
 
             cart.addCartProduct(cartProduct);
         }

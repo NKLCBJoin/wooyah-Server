@@ -103,7 +103,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.info("authenticaiton 객체 생성");
+        //log.info("authenticaiton 객체 생성");
     }
 
 
