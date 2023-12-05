@@ -1,10 +1,12 @@
 package com.wooyah.controller;
 
 import com.wooyah.dto.cart.CartDTO;
+import com.wooyah.dto.cart.CartWriteDTO;
 import com.wooyah.dto.common.ApiResponse;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.dto.product.ProductDTO;
 import com.wooyah.service.CartService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.Response;
@@ -85,6 +87,17 @@ public class CartController {
                 .code(HttpStatus.OK.value())
                 .message("개발용 모든 카트 조회")
                 .result(allCarts)
+                .build();
+    }
+
+    public ApiResponse<?> writeCart(@RequestBody CartWriteDTO cartWriteDTO, HttpServletResponse response){
+
+
+
+        return ApiResponse.builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("함께 장보기 등록이 완료되었습니다.")
                 .build();
     }
 }

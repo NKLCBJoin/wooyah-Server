@@ -3,6 +3,7 @@ package com.wooyah.controller;
 import com.wooyah.dto.cart.CartDTO;
 import com.wooyah.dto.common.ApiResponse;
 import com.wooyah.dto.user.signup.UserSignUpDTO;
+import com.wooyah.jwt.JwtAuthenticationProcessingFilter;
 import com.wooyah.jwt.JwtService;
 import com.wooyah.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,14 +17,18 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtService jwtService;
-
+    private final JwtAuthenticationProcessingFilter jwt;
 
     @GetMapping("/test")
     public String jwtTest(HttpServletResponse response) {
 
-        //jwtService.sendAccessToken(response, jwtService.createAccessToken("123")); //임의로 이메일 추가하여 response에 토큰 달아서 보내기
 
-        return "토큰 테스트";
+        Long jwtExtractId = jwt.getJwtExtractId();
+
+
+
+        //jwtService.sendAccessToken(response, jwtService.createAccessToken("123")); //임의로 이메일 추가하여 response에 토큰 달아서 보내기
+        return "토큰 테스트 : 이메일에 대한 아이디는"+jwtExtractId;
     }
 
     @PostMapping("/api/auth/{sns}")
