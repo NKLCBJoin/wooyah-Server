@@ -47,4 +47,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<CartUser> cartUsers = new ArrayList<>();
+
+    public void addCartUser(CartUser cartUser){
+        cartUsers.add(cartUser);
+    }
 }
