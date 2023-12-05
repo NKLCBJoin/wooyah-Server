@@ -12,4 +12,7 @@ public interface CartUserRepository extends JpaRepository<CartUser, Long> {
     Optional<CartUser> findByUserAndCart(User user, Cart cart);
 
     List<CartUser> findALlByUser(User user);
+
+    //추가함
+    Optional<CartUser> findByCartIdAndUserId(Long cartId, Long userId);
 }

@@ -3,6 +3,7 @@ package com.wooyah.service;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.dto.user.UserDTO;
 import com.wooyah.dto.user.request.UserLocationRequest;
+import com.wooyah.dto.user.signup.UserSignUpDTO;
 import com.wooyah.entity.Cart;
 import com.wooyah.entity.CartUser;
 import com.wooyah.entity.User;
@@ -64,5 +65,33 @@ public class UserService {
                 .count(myCarts.size())
                 .data(response)
                 .build();
+    }
+
+    public Long getUserIdByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("이메일에 해당하는 윶저가 없습니다: " + email));
+        return user.getId();
+    }
+
+
+    //이메일 db 조회후 처리하기
+    @Transactional
+    public String emailcheck(UserSignUpDTO userSignUpDto) {
+
+        if (userRepository.findByEmail(userSignUpDto.getEmail()).isPresent()) {
+            return "이메일 정보가 이미 있습니다.";
+        }
+        else {
+            User user = User.builder()
+                    .email(userSignUpDto.getEmail())
+                    .nickname(userSignUpDto.getNickname())
+                    .phone(userSignUpDto.getPhone())
+                    .deviceNumber(userSignUpDto.getDevice_number())
+                    .location(userSignUpDto.getLocation())
+                    .build();
+
+            userRepository.save(user);
+            return "회원가입 완료";
+        }
     }
 }
