@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll() // 주소 허용 permitall() -> 나머지 다 열어준다
                 //.requestMatchers(new AntPathRequestMatcher("/test")).permitAll() // 주소 허용 permitall() -> 나머지 다 열어준다
                 //.requestMatchers(new AntPathRequestMatcher("/api/cart/**")).permitAll() // 주소 허용 permitall() -> 나머지 다 열어준다
-                .anyRequest().authenticated() //잠금
+                .anyRequest().permitAll() //잠금
                 .and()
                 .httpBasic().disable() //http 기본 인증 인가 사용 x
                 .cors().disable()
