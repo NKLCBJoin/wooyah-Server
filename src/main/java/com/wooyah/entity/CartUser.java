@@ -29,4 +29,16 @@ public class CartUser {
     @Enumerated(EnumType.STRING)
     private CartUserStatus status;
 
+
+    //이게 필요할까?
+    public void setUser(User user){
+        this.user = user;
+        user.getCartUsers().add(this);
+    }
+
+    public void setCart(Cart cart){
+        this.cart = cart;
+        cart.getCartUsers().add(this);
+    }
+
 }
