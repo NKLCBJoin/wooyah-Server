@@ -6,6 +6,7 @@ import com.wooyah.dto.user.signup.UserSignUpDTO;
 import com.wooyah.jwt.JwtAuthenticationProcessingFilter;
 import com.wooyah.jwt.JwtService;
 import com.wooyah.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,11 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtService jwtService;
-    private final JwtAuthenticationProcessingFilter jwt;
 
     @GetMapping("/test")
-    public String jwtTest() {
+    public String jwtTest(HttpServletRequest request) {
 
-        Long jwtExtractId = jwt.getJwtExtractId();
+        Long jwtExtractId = (Long) request.getAttribute("jwtExtractId");
 
         return "토큰 테스트 : 이메일에 대한 아이디는"+jwtExtractId;
     }

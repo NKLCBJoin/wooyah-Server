@@ -31,10 +31,9 @@ public class CartUserService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final CartUserRepository cartUserRepository;
-    private final JwtAuthenticationProcessingFilter jwt;
 
 
-    public void saveCartUser(Long cartId) {
+    public void saveCartUser(Long cartId, Long userId) {
         //cart_id의 CartStatus를 확인하여 INPROGRESS인 경우에만 통과
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니 id가 잘못 됐습니다"));
@@ -53,7 +52,7 @@ public class CartUserService {
             throw new IllegalStateException("참가자 초과.");
         }
 
-        User user = userRepository.findById(jwt.getJwtExtractId()).get();
+        User user = userRepository.findById(userId).get();
 
         //CartUser에 입력받은 cart_id, user_id 등을 입력하여 JPA를 이용하여 DB에 저장
         CartUser cartUser = CartUser.builder()
@@ -71,9 +70,9 @@ public class CartUserService {
     }
 
 
-    public CartUserDTO getCartUserStatus(Long cartId, String userEmail) {
+    public CartUserDTO getCartUserStatus(Long cartId, Long userId) {
 
-        User user = userRepository.findById(jwt.getJwtExtractId()).get();
+        User user = userRepository.findById(userId).get();
 
         //cart_id와 user_id로 CartUser 엔티티를 찾기
         CartUser cartUser = cartUserRepository.findByCartIdAndUserId(cartId, user.getId()).get();

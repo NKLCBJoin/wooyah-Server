@@ -30,7 +30,6 @@ public class CartService {
     private final UserRepository userRepository;
 
     private final ProductService productService;
-    private final JwtAuthenticationProcessingFilter jwt;
 
     public CartDTO.Detail getDetail(Long cartId){
         Cart findCart = cartRepository.findById(cartId)
@@ -117,9 +116,9 @@ public class CartService {
 
     //카트 생성
     @Transactional
-    public void saveCart(CartWriteDTO cartWriteDTO) {
+    public void saveCart(CartWriteDTO cartWriteDTO, Long userId) {
 
-        User user = userRepository.findById(jwt.getJwtExtractId()).get();
+        User user = userRepository.findById(userId).get();
 
         //cart 생성
         Cart cart = Cart.builder()

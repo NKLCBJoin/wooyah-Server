@@ -11,6 +11,7 @@ import com.wooyah.entity.CartProduct;
 import com.wooyah.entity.CartUser;
 import com.wooyah.entity.Product;
 import com.wooyah.service.CartService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -110,8 +111,11 @@ public class CartController {
     }
 
     @PostMapping
-    public ApiResponse<?> writeCart(@RequestBody CartWriteDTO cartWriteDTO){
-        cartService.saveCart(cartWriteDTO);
+    public ApiResponse<?> writeCart(@RequestBody CartWriteDTO cartWriteDTO, HttpServletRequest request){
+
+        Long jwtExtractId = (Long) request.getAttribute("jwtExtractId");
+
+        cartService.saveCart(cartWriteDTO, jwtExtractId);
 
         return ApiResponse.<List<?>>builder()
                 .isSuccess(true)
