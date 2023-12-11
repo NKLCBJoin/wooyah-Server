@@ -13,6 +13,8 @@ import com.wooyah.repository.CartRepository;
 import com.wooyah.repository.CartUserRepository;
 import com.wooyah.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,11 +48,11 @@ public class UserService {
         user.setLongitude(userLocation.getLongitude());
     }
 
-    public PaginationListDTO<UserDTO.Detail> getMyCarts(Long userId) {
+    public PaginationListDTO<UserDTO.Detail> getMyCarts(Long userId, Pageable page) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ExceptionMessage.USER_NOT_FOUND));
 
-        List<CartUser> carts = cartUserRepository.findALlByUser(user);
+        Page<CartUser> carts = cartUserRepository.findALlByUser(user, page);
 
         List<Cart> myCarts = carts.stream()
                 .filter(cartUser -> cartUser.getIsOwner().equals(Boolean.TRUE))

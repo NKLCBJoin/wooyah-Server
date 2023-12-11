@@ -46,7 +46,7 @@ public class UserController {
     public ApiResponse<PaginationListDTO<UserDTO.Detail>> getMyPageCarts(Pageable page,
                                                                          HttpServletRequest request){
         Long userId = (Long) request.getAttribute("jwtExtractId");
-        PaginationListDTO<UserDTO.Detail> myCarts = userService.getMyCarts(userId);
+        PaginationListDTO<UserDTO.Detail> myCarts = userService.getMyCarts(userId, page);
 
         return ApiResponse.<PaginationListDTO<UserDTO.Detail>>builder()
                 .isSuccess(true)
