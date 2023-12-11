@@ -62,9 +62,9 @@ public class CartUserService {
                 .status(CartUserStatus.PENDING) // 기본값으로 설정, 필요에 따라 변경
                 .build();
 
-        //이렇게 하는게 맞나..?
-        cartUser.setUser(user);
-        cartUser.setCart(cart);
+        user.addCartUser(cartUser);
+        cart.addCartUser(cartUser);
+
 
         cartUserRepository.save(cartUser);
     }
