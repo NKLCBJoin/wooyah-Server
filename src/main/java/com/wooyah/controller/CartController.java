@@ -44,9 +44,9 @@ public class CartController {
     }
 
     @GetMapping("/locations")
-    public ApiResponse<PaginationListDTO<CartDTO.Near>> getNearCarts(@RequestParam(value="zoom", defaultValue="1") int zoom){
-        // TODO 해당 부분 JWT 이용해서 변경
-        Long userId = 1L;
+    public ApiResponse<PaginationListDTO<CartDTO.Near>> getNearCarts(@RequestParam(value="zoom", defaultValue="1") int zoom,
+                                                                     HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("jwtExtractId");
         PaginationListDTO<CartDTO.Near> nearCarts = cartService.getNearCarts(userId, zoom);
 
         return ApiResponse.<PaginationListDTO<CartDTO.Near>>builder()
@@ -73,8 +73,9 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ApiResponse<?> deleteCart(@RequestParam(value="cartId") Long cartId){
-        Long userId = 1L;
+    public ApiResponse<?> deleteCart(@RequestParam(value="cartId") Long cartId,
+                                     HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("jwtExtractId");
         cartService.deleteCart(userId, cartId);
 
         return ApiResponse.builder()

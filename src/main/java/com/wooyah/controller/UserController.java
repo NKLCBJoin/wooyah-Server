@@ -5,6 +5,7 @@ import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.dto.user.UserDTO;
 import com.wooyah.dto.user.request.UserLocationRequest;
 import com.wooyah.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     @GetMapping("/phone")
-    public ApiResponse<UserDTO.Phone> getPhoneNumber(){
-        Long userId = 1L;
+    public ApiResponse<UserDTO.Phone> getPhoneNumber( HttpServletRequest request ){
+        Long userId = (Long) request.getAttribute("jwtExtractId");
         UserDTO.Phone response = userService.getPhoneNum(userId);
         return ApiResponse.<UserDTO.Phone>builder()
                 .isSuccess(true)
@@ -30,8 +31,9 @@ public class UserController {
     }
 
     @PutMapping("location")
-    public ApiResponse<?> enterUserLocation(@RequestBody UserLocationRequest userLocation){
-        Long userId = 1L;
+    public ApiResponse<?> enterUserLocation(@RequestBody UserLocationRequest userLocation,
+                                            HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("jwtExtractId");
         userService.updateUserLocation(userLocation, userId);
         return ApiResponse.builder()
                 .isSuccess(true)
@@ -41,8 +43,9 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public ApiResponse<PaginationListDTO<UserDTO.Detail>> getMyPageCarts(Pageable page){
-        Long userId = 1L;
+    public ApiResponse<PaginationListDTO<UserDTO.Detail>> getMyPageCarts(Pageable page,
+                                                                         HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("jwtExtractId");
         PaginationListDTO<UserDTO.Detail> myCarts = userService.getMyCarts(userId);
 
         return ApiResponse.<PaginationListDTO<UserDTO.Detail>>builder()
