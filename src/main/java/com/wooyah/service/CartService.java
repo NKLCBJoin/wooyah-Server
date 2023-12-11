@@ -1,14 +1,16 @@
 package com.wooyah.service;
 
 import com.wooyah.dto.cart.CartDTO;
+import com.wooyah.dto.cart.CartHomeDTO;
+import com.wooyah.dto.cart.CartWriteDTO;
 import com.wooyah.dto.common.PaginationListDTO;
-import com.wooyah.entity.Cart;
-import com.wooyah.entity.CartUser;
-import com.wooyah.entity.User;
+import com.wooyah.entity.*;
 import com.wooyah.entity.enums.CartStatus;
+import com.wooyah.entity.enums.CartUserStatus;
 import com.wooyah.exceptions.BadRequestException;
 import com.wooyah.exceptions.ExceptionMessage;
 import com.wooyah.exceptions.NotFoundException;
+import com.wooyah.jwt.JwtAuthenticationProcessingFilter;
 import com.wooyah.repository.CartRepository;
 import com.wooyah.repository.CartUserRepository;
 import com.wooyah.repository.UserRepository;
@@ -26,6 +28,8 @@ import java.util.Optional;
 public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
+
+    private final ProductService productService;
 
     public CartDTO.Detail getDetail(Long cartId){
         Cart findCart = cartRepository.findById(cartId)
@@ -101,5 +105,54 @@ public class CartService {
                 .count(response.size())
                 .data(response)
                 .build();
+    }
+
+    //추가 코드
+    public CartHomeDTO.Detail getHomeDetail(){
+        List<Cart> carts = cartRepository.findAll();
+
+        return CartHomeDTO.Detail.from(carts);
+    }
+
+    //카트 생성
+    @Transactional
+    public void saveCart(CartWriteDTO cartWriteDTO, Long userId) {
+
+        User user = userRepository.findById(userId).get();
+
+        //cart 생성
+        Cart cart = Cart.builder()
+                .shoppingLocation(cartWriteDTO.getLocation())
+                .participantNumber(cartWriteDTO.getParticipantNumber())
+                .latitude(cartWriteDTO.getLatitude())
+                .longitude(cartWriteDTO.getLongitude())
+                .status(CartStatus.INPROGRESS)
+                .build();
+
+        //product db에 저장
+        List<Product> products = productService.saveProducts(cartWriteDTO.getProducts());
+
+        // cart에 있는 cartProducts에 추가
+        for (Product product : products) {
+            CartProduct cartProduct = CartProduct.builder()
+                    .product(product)
+                    .cart(cart)
+                    .build();
+
+            cart.addCartProduct(cartProduct);
+        }
+
+        // 사용자와 장바구니 연결
+        CartUser cartUser = CartUser.builder()
+                .user(user)
+                .cart(cart)
+                .isOwner(true)
+                .status(CartUserStatus.APPROVED)
+                .build();
+
+        cart.addCartUser(cartUser);
+
+        // 장바구니 저장
+        cartRepository.save(cart);
     }
 }

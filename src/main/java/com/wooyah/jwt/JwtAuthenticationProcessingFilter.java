@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,7 @@ import java.util.Random;
 
 @RequiredArgsConstructor
 @Slf4j
+@Getter
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -50,6 +52,17 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
                         .ifPresent(email -> userRepository.findByEmail(email)
                                 .ifPresent(this::saveAuthentication)));
+
+        jwtService.extractAccessToken(request)
+                .filter(jwtService::isTokenValid)
+                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
+                        .ifPresent(email -> {
+                            userRepository.findByEmail(email)
+                                    .ifPresent(user -> {
+                                        request.setAttribute("jwtExtractId", user.getId());
+                                        saveAuthentication(user);
+                                    });
+                        }));
 
         filterChain.doFilter(request, response);
     }
@@ -86,7 +99,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.info("authenticaiton 객체 생성");
+        //log.info("authenticaiton 객체 생성");
     }
 
 

@@ -1,10 +1,18 @@
 package com.wooyah.controller;
 
 import com.wooyah.dto.cart.CartDTO;
+import com.wooyah.dto.cart.CartHomeDTO;
+import com.wooyah.dto.cart.CartWriteDTO;
 import com.wooyah.dto.common.ApiResponse;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.dto.product.ProductDTO;
+import com.wooyah.entity.Cart;
+import com.wooyah.entity.CartProduct;
+import com.wooyah.entity.CartUser;
+import com.wooyah.entity.Product;
 import com.wooyah.service.CartService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.Response;
@@ -36,9 +44,9 @@ public class CartController {
     }
 
     @GetMapping("/locations")
-    public ApiResponse<PaginationListDTO<CartDTO.Near>> getNearCarts(@RequestParam(value="zoom", defaultValue="1") int zoom){
-        // TODO 해당 부분 JWT 이용해서 변경
-        Long userId = 1L;
+    public ApiResponse<PaginationListDTO<CartDTO.Near>> getNearCarts(@RequestParam(value="zoom", defaultValue="1") int zoom,
+                                                                     HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("jwtExtractId");
         PaginationListDTO<CartDTO.Near> nearCarts = cartService.getNearCarts(userId, zoom);
 
         return ApiResponse.<PaginationListDTO<CartDTO.Near>>builder()
@@ -65,8 +73,9 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ApiResponse<?> deleteCart(@RequestParam(value="cartId") Long cartId){
-        Long userId = 1L;
+    public ApiResponse<?> deleteCart(@RequestParam(value="cartId") Long cartId,
+                                     HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("jwtExtractId");
         cartService.deleteCart(userId, cartId);
 
         return ApiResponse.builder()
@@ -85,6 +94,34 @@ public class CartController {
                 .code(HttpStatus.OK.value())
                 .message("개발용 모든 카트 조회")
                 .result(allCarts)
+                .build();
+    }
+
+
+    @GetMapping("/home")
+    public ApiResponse<CartHomeDTO.Detail> cartHomeDTOApiResponse() {
+
+        CartHomeDTO.Detail homepage = cartService.getHomeDetail();
+
+        return ApiResponse.<CartHomeDTO.Detail>builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("홈 화면 글 목록")
+                .result(homepage)
+                .build();
+    }
+
+    @PostMapping
+    public ApiResponse<?> writeCart(@RequestBody CartWriteDTO cartWriteDTO, HttpServletRequest request){
+
+        Long jwtExtractId = (Long) request.getAttribute("jwtExtractId");
+
+        cartService.saveCart(cartWriteDTO, jwtExtractId);
+
+        return ApiResponse.<List<?>>builder()
+                .isSuccess(true)
+                .code(HttpStatus.OK.value())
+                .message("함께 장보기 등록이 완료되었습니다.")
                 .build();
     }
 }
