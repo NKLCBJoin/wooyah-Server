@@ -1,29 +1,20 @@
 package com.wooyah.controller;
 
 import com.wooyah.dto.cart.CartDTO;
-import com.wooyah.dto.cart.CartHomeDTO;
 import com.wooyah.dto.cart.CartWriteDTO;
 import com.wooyah.dto.common.ApiResponse;
 import com.wooyah.dto.common.PaginationListDTO;
-import com.wooyah.dto.product.ProductDTO;
-import com.wooyah.entity.Cart;
-import com.wooyah.entity.CartProduct;
-import com.wooyah.entity.CartUser;
-import com.wooyah.entity.Product;
 import com.wooyah.service.CartService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.connector.Response;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -99,11 +90,15 @@ public class CartController {
 
 
     @GetMapping("/home")
-    public ApiResponse<CartHomeDTO.Detail> cartHomeDTOApiResponse() {
+    public ApiResponse<PaginationListDTO<CartDTO.Detail>> cartHomeDTOApiResponse(@RequestParam(defaultValue = "0") int page,
+                                                                                 @RequestParam(defaultValue = "10") int size,
+                                                                                 @RequestParam(defaultValue = "id") String sortBy) {
 
-        CartHomeDTO.Detail homepage = cartService.getHomeDetail();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sortBy));
 
-        return ApiResponse.<CartHomeDTO.Detail>builder()
+        PaginationListDTO<CartDTO.Detail> homepage =cartService.getHomeDetail(pageable);
+
+        return ApiResponse.<PaginationListDTO<CartDTO.Detail>>builder()
                 .isSuccess(true)
                 .code(HttpStatus.OK.value())
                 .message("홈 화면 글 목록")
@@ -118,7 +113,7 @@ public class CartController {
 
         cartService.saveCart(cartWriteDTO, jwtExtractId);
 
-        return ApiResponse.<List<?>>builder()
+        return ApiResponse.builder()
                 .isSuccess(true)
                 .code(HttpStatus.OK.value())
                 .message("함께 장보기 등록이 완료되었습니다.")

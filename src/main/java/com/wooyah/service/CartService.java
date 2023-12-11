@@ -1,7 +1,6 @@
 package com.wooyah.service;
 
 import com.wooyah.dto.cart.CartDTO;
-import com.wooyah.dto.cart.CartHomeDTO;
 import com.wooyah.dto.cart.CartWriteDTO;
 import com.wooyah.dto.common.PaginationListDTO;
 import com.wooyah.entity.*;
@@ -10,17 +9,16 @@ import com.wooyah.entity.enums.CartUserStatus;
 import com.wooyah.exceptions.BadRequestException;
 import com.wooyah.exceptions.ExceptionMessage;
 import com.wooyah.exceptions.NotFoundException;
-import com.wooyah.jwt.JwtAuthenticationProcessingFilter;
 import com.wooyah.repository.CartRepository;
-import com.wooyah.repository.CartUserRepository;
 import com.wooyah.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -108,10 +106,20 @@ public class CartService {
     }
 
     //추가 코드
-    public CartHomeDTO.Detail getHomeDetail(){
-        List<Cart> carts = cartRepository.findAll();
+    public PaginationListDTO<CartDTO.Detail> getHomeDetail(Pageable page){
 
-        return CartHomeDTO.Detail.from(carts);
+        Page<Cart> pageCarts = cartRepository.findAll(page);
+        List<Cart> carts = pageCarts.getContent();
+
+        List<CartDTO.Detail> homeCartsDetails = carts.stream()
+                .map(CartDTO.Detail::from)
+                .toList();
+
+        return PaginationListDTO.<CartDTO.Detail>builder()
+                .count(homeCartsDetails.size())
+                .data(homeCartsDetails)
+                .build();
+
     }
 
     //카트 생성

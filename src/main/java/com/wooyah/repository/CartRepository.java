@@ -1,6 +1,8 @@
 package com.wooyah.repository;
 
 import com.wooyah.entity.Cart;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,5 +16,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "* sin(radians(c.latitude)))) AS distance " +
             "FROM carts c ORDER BY distance ASC LIMIT ?3 ", nativeQuery = true)
     List<Cart> findCartsNearestTo(BigDecimal latitude, BigDecimal longitude, int limit);
+
+    Page<Cart> findAll(Pageable pageable);
 
 }

@@ -23,7 +23,7 @@ public class CartUserController {
 
     private final CartUserService cartUserService;
 
-    @PostMapping("/{cartId}")
+    @PostMapping("/save{cartId}")
     public ApiResponse<?> requestCartUser(@PathVariable("cartId") Long cartId, HttpServletRequest request)throws Exception{
 
         Long jwtExtractId = (Long) request.getAttribute("jwtExtractId");
@@ -37,8 +37,8 @@ public class CartUserController {
                 .build();
     }
 
-    @PostMapping("/{cartIdx}")
-    public ApiResponse<CartUserDTO> requestCartResult(@PathVariable("cartIdx") Long cartId, HttpServletRequest request)throws Exception{
+    @PostMapping("/get{cartId}")
+    public ApiResponse<CartUserDTO> requestCartResult(@PathVariable("cartId") Long cartId, HttpServletRequest request)throws Exception{
 
         Long jwtExtractId = (Long) request.getAttribute("jwtExtractId");
 
