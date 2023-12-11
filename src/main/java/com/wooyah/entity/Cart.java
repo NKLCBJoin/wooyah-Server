@@ -60,4 +60,13 @@ public class Cart extends BaseEntity {
                 .orElseThrow(() -> new NotFoundException(ExceptionMessage.CART_OWNER_NOT_FOUND));
     }
 
+    public String getOwnerPhoneNumber() {
+        return cartUsers.stream()
+                .filter(CartUser::getIsOwner)
+                .map(CartUser::getUser)
+                .map(User::getPhone)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(ExceptionMessage.CART_OWNER_NOT_FOUND));
+    }
+
 }

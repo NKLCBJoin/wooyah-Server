@@ -15,6 +15,7 @@ public class CartDTO {
     @Builder
     public static class Detail{
         private Long cartId;
+        private String ownerPhoneNumber;
         private String nickname;
         private String shoppingLocation;
         private List<ProductDTO.Detail> products;
@@ -28,6 +29,7 @@ public class CartDTO {
 
             return Detail.builder()
                     .cartId(cart.getId())
+                    .ownerPhoneNumber(cart.getOwnerPhoneNumber())
                     .cartStatus(cart.getStatus())
                     .nickname(cart.getOwnerNickname())
                     .shoppingLocation(cart.getShoppingLocation())
