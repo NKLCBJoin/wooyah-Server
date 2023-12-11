@@ -8,7 +8,9 @@ import com.wooyah.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,11 +45,13 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public ApiResponse<PaginationListDTO<UserDTO.Detail>> getMyPageCarts(Pageable page,
+    public ApiResponse<PaginationListDTO<UserDTO.Detail>> getMyPageCarts(@RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size,
+                                                                         @RequestParam(defaultValue = "cart_id") String sortBy,
                                                                          HttpServletRequest request){
         Long userId = (Long) request.getAttribute("jwtExtractId");
-        PaginationListDTO<UserDTO.Detail> myCarts = userService.getMyCarts(userId, page);
-
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sortBy));
+        PaginationListDTO<UserDTO.Detail> myCarts = userService.getMyCarts(userId, pageable);
         return ApiResponse.<PaginationListDTO<UserDTO.Detail>>builder()
                 .isSuccess(true)
                 .code(HttpStatus.OK.value())
